@@ -5,51 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VIP Rewards Wallet</title>
 <style>
-  /* UPDATED COLORS: Sleek Dark & Metallic Gold Theme */
-  :root { --bg: #0a0a0a; --card: #151515; --text: #ffffff; }
-  @media (prefers-color-scheme: dark) { :root { --bg: #0a0a0a; --card: #151515; --text: #ffffff; } }
+  :root { --bg: #f0f4f8; --card: #ffffff; --text: #000000; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; } }
 
   /* ZERO FLICKER & FADE OUT READY */
   body { display: none; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: opacity 0.1s ease, background-color 0.5s; opacity: 1; }
   
-  .container { width: 100%; max-width: 440px; background: var(--card); padding: 20px 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: center; box-sizing: border-box; margin: auto; display: none; border: 1px solid #333; }
+  .container { width: 100%; max-width: 440px; background: var(--card); padding: 20px 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; box-sizing: border-box; margin: auto; display: none; }
   .active { display: block; }
   
   /* 2050 FULL GLOSSY BUTTONS */
-  .btn-2050 { position: relative; width: 100%; padding: 18px 10px; border-radius: 20px; font-size: 17px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer; overflow: hidden; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); box-sizing: border-box; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-top: 15px; display: block; text-decoration: none; }
-  .btn-2050::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0)); border-radius: 20px 20px 100px 100px / 20px 20px 25px 25px; pointer-events: none; }
+  .btn-2050 { position: relative; width: 100%; padding: 18px 10px; border-radius: 20px; font-size: 17px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.5); cursor: pointer; overflow: hidden; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); box-sizing: border-box; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-top: 15px; display: block; }
+  .btn-2050::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0)); border-radius: 20px 20px 100px 100px / 20px 20px 25px 25px; pointer-events: none; }
   .btn-2050:active { transform: scale(0.95); }
-  .btn-2050:disabled { background: #333 !important; color: #777 !important; box-shadow: none !important; cursor: not-allowed; border-color: #444; text-shadow: none; }
+  .btn-2050:disabled { background: #888 !important; box-shadow: none !important; cursor: not-allowed; border-color: #555; }
       
-  /* SPECIFIC BUTTON COLORS - UPDATED */
-  .neon-gold { background: linear-gradient(135deg, #d4af37, #9e8022); box-shadow: 0 12px 25px rgba(212, 175, 55, 0.3), inset 0 -3px 10px rgba(0,0,0,0.2); color: #000; text-shadow: none; border: 1px solid #ffe699; }
-  .btn-insta { background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 12px 25px rgba(220, 39, 67, 0.3), inset 0 -3px 10px rgba(0,0,0,0.1); }
+  .neon-green { background: linear-gradient(135deg, #00ff87, #00b75a); box-shadow: 0 12px 25px rgba(0, 255, 135, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
+  .neon-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); box-shadow: 0 12px 25px rgba(0, 114, 255, 0.4), inset 0 -3px 10px rgba(0,0,0,0.1); }
 
-  .fancy-card { border-radius: 15px; padding: 15px; margin-bottom: 12px; color: white; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid #333; }
-  
-  /* PREMIUM CARD COLORS - UPDATED */
-  .c-dark-gold { background: linear-gradient(135deg, #2a2415, #14110a); border: 1px solid #d4af37; color: #d4af37; }
-  .c-metallic { background: linear-gradient(135deg, #d4af37, #aa8529); color: #000; border: none; }
-  .c-charcoal { background: linear-gradient(135deg, #1f1f1f, #121212); }
+  .fancy-card { border-radius: 15px; padding: 15px; margin-bottom: 12px; color: white; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+  .c-purple { background: linear-gradient(135deg, #8E54E9, #4776E6); }
+  .c-light-purple { background: linear-gradient(135deg, #ab47bc, #df78ef); }
+  .c-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+  .c-gold { background: linear-gradient(135deg, #f6d365, #fda085); color: #000; }
   
   .status-badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
-  .bg-warning { background: #332b00; color: #ffeb3b; border: 1px solid #ffeb3b;}
-  .bg-success { background: #003314; color: #4caf50; border: 1px solid #4caf50;}
+  .bg-warning { background: #fff3cd; color: #856404; border: 1px solid #856404;}
+  .bg-success { background: #d4edda; color: #155724; border: 1px solid #155724;}
   
-  .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;}
+  .visit-row { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;}
   .visit-row:last-child { border-bottom: none; }
-  .tag-done { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; font-size: 12px; color: #ccc; }
-  .tag-surprise { background: #d4af37; color: #000; padding: 4px 10px; border-radius: 8px; font-size: 12px; animation: pulse 1.5s infinite; }
+  .tag-done { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 8px; font-size: 12px; }
+  .tag-surprise { background: #ffd700; color: #000; padding: 4px 10px; border-radius: 8px; font-size: 12px; animation: pulse 1.5s infinite; }
   
-  .congrats-box { background: linear-gradient(135deg, #d4af37, #b8962e); padding: 20px; border-radius: 15px; margin-top: 15px; margin-bottom: 15px; color: #000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); animation: popIn 0.5s ease; border: 2px solid #fff; display: none;}
+  .congrats-box { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 20px; border-radius: 15px; margin-top: 15px; margin-bottom: 15px; color: #000; box-shadow: 0 5px 15px rgba(255,165,0,0.4); animation: popIn 0.5s ease; border: 2px solid #fff; display: none;}
   
+  /* Social & Feedback Styles */
+  .social-grid { display: flex; gap: 10px; margin-top: 15px; justify-content: center; flex-wrap: wrap; }
+  .chip { padding: 10px 15px; border-radius: 30px; font-size: 13px; font-weight: bold; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: transform 0.2s; }
+  .chip:active { transform: scale(0.95); }
+  .chip-insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+  .chip-web { background: #333; }
+  .chip-wa { background: #25D366; }
+  
+  .star-box { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #eee; margin-top: 15px; color: #333; }
+  .stars { font-size: 32px; display: flex; justify-content: center; gap: 5px; cursor: pointer; margin-top: 5px; }
+  .stars span { transition: transform 0.2s; }
+  .stars span:active { transform: scale(1.3); }
+
   @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-  /* ANTI-FRAUD CSS INJECTIONS */
-  @keyframes pulseFraud { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); } 70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
-  .anti-fraud-pulse { animation: pulseFraud 1.5s infinite; border: 2px dashed #d4af37 !important; }
-  .live-clock { font-family: monospace; font-size: 14px; color: #000; font-weight: bold; margin-top: 10px; text-align: center; background: rgba(255,255,255,0.3); padding: 5px; border-radius: 8px; display: none; }
+  @keyframes pulseFraud { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+  .anti-fraud-pulse { animation: pulseFraud 1.5s infinite; border: 2px dashed #25D366 !important; }
+  .live-clock { font-family: monospace; font-size: 14px; color: #fff; font-weight: bold; margin-top: 10px; text-align: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 8px; display: none; }
 </style>
 </head>
 <body>
@@ -58,117 +66,126 @@
 
 <div id="step-wallet" class="container">
   
-  <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
+  <img id="shopLogo" src="" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain; display: none;">
   
-  <h2 id="greetingText" style="margin-top:0; font-weight:900; color: #d4af37;">My Rewards Wallet</h2>
+  <h2 id="greetingText" style="margin-top:0; font-weight:900;">My Rewards Wallet</h2>
   <div id="visitStatus" class="status-badge"></div>
 
-  <div class="fancy-card c-dark-gold">
+  <div id="staticCouponBox" class="fancy-card c-gold" style="display: none; text-align: center;">
+    <div style="font-size: 12px; font-weight: 900; letter-spacing: 1px; opacity: 0.8;">🔥 SPECIAL STORE OFFER</div>
+    <div id="staticCouponText" style="font-size: 20px; font-weight: 900; margin-top: 5px;"></div>
+  </div>
+
+  <div class="fancy-card c-purple">
     <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">MONTHLY LUCKY DRAW</div>
     <div style="font-size: 16px; font-weight: 900; margin-top: 4px;">LIFETIME ENTRY CONFIRMED ✅</div>
   </div>
 
-  <div id="voucher-box" class="fancy-card c-metallic">
-    <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">YOUR NEXT-BUY COUPON</div>
+  <div id="voucher-box" class="fancy-card c-light-purple">
+    <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">EARNED VOUCHER (VALID NEXT VISIT)</div>
     <div id="revVoucher" style="font-size: 22px; font-weight: 900; margin-top: 4px;">...</div>
     <div id="live-time" class="live-clock"></div>
   </div>
 
-  <div class="fancy-card c-charcoal">
-    <div style="font-size: 14px; opacity: 1; font-weight: 900; margin-bottom: 10px; letter-spacing: 1px; color: #d4af37;">STAMP JOURNEY (<span id="stampCountText">0</span>/5)</div>
+  <div class="fancy-card c-blue">
+    <div style="font-size: 14px; opacity: 1; font-weight: 900; margin-bottom: 10px; letter-spacing: 1px;">STAMP JOURNEY (<span id="stampCountText">0</span>/5)</div>
     <div id="journeyList"></div>
   </div>
 
   <div id="congratsBox" class="congrats-box">
     <h2 style="margin: 0 0 10px 0; font-size: 24px;">🎉 CONGRATULATIONS! 🎉</h2>
     <p style="font-size: 16px; margin-bottom: 10px;">You completed 5 visits!</p>
-    <div style="background: white; padding: 10px; border-radius: 8px; font-weight: 900; font-size: 16px; color: #000;">
+    <div style="background: white; padding: 10px; border-radius: 8px; font-weight: 900; font-size: 16px; color: #d32f2f;">
       Show this screen to the cashier to get your SURPRISE REWARD! 🎁
     </div>
   </div>
 
-  <button id="newStampBtn" class="btn-2050 neon-gold" onclick="requestNewStamp()">📍 I'M AT THE SHOP - LOG VISIT</button>
+  <button id="newStampBtn" class="btn-2050 neon-blue" onclick="requestNewStamp()">📍 I'M AT THE SHOP - LOG VISIT</button>
 
-  <a href="https://www.instagram.com/rajagarments_?igsh=MXFya3NwemkydGd6Mw==" target="_blank" class="btn-2050 btn-insta">
-    📸 FOLLOW US ON INSTAGRAM
-  </a>
+  <div id="reviewBox" class="star-box" style="display: none;">
+      <div style="font-weight: 900; font-size: 16px; margin-bottom: 5px;">Rate Your Visit Today</div>
+      <div style="font-size: 12px; color: #666;">Your feedback helps us improve</div>
+      <div class="stars">
+          <span onclick="rateShop(1)">⭐</span>
+          <span onclick="rateShop(2)">⭐</span>
+          <span onclick="rateShop(3)">⭐</span>
+          <span onclick="rateShop(4)">⭐</span>
+          <span onclick="rateShop(5)">⭐</span>
+      </div>
+  </div>
+
+  <div id="socialBox" class="social-grid" style="display: none;">
+      <a id="btnWaChat" href="#" target="_blank" class="chip chip-wa" style="display: none;">💬 WhatsApp Us</a>
+      <a id="btnInsta" href="#" target="_blank" class="chip chip-insta" style="display: none;">📸 Follow Us</a>
+      <a id="btnWeb" href="#" target="_blank" class="chip chip-web" style="display: none;">🌐 Our Website</a>
+  </div>
 
   <button id="logoutBtn" onclick="secureLogout()" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
+
+  <div id="exchangeText" style="font-size: 11px; color: #888; margin-top: 15px; font-weight: bold;"></div>
 </div>
 
-<div id="waGateOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;">
-    
-    <div style="background: #151515; border: 1px solid #d4af37; padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-width: 320px; width: 100%; box-sizing: border-box; margin: auto;">
+<!-- FROSTED GLASS OVERLAY -->
+<div id="waGateOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;">
+    <div style="background: white; padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 320px; width: 100%; box-sizing: border-box; margin: auto;">
         <div style="font-size: 42px; margin-bottom: 5px;">🎁</div>
-        <h2 style="color: #d4af37; margin: 0 0 8px 0; font-family: sans-serif; font-size: 22px; font-weight: 800;">Reward Locked</h2>
-        <p style="color: #ccc; margin: 0 0 20px 0; font-family: sans-serif; font-size: 14px; line-height: 1.4;">Join our VIP WhatsApp Community to verify your profile and instantly reveal your voucher!</p>
+        <h2 style="color: #333; margin: 0 0 8px 0; font-family: sans-serif; font-size: 22px; font-weight: 800;">Reward Locked</h2>
+        <p style="color: #666; margin: 0 0 20px 0; font-family: sans-serif; font-size: 14px; line-height: 1.4;">Join our VIP WhatsApp Community to verify your profile and instantly reveal your voucher!</p>
         
         <a href="#" id="dynamicWaGateLink" onclick="unlockWallet()" target="_blank" style="display: block; background-color: #25D366; color: white; padding: 14px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 900; font-family: sans-serif; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4); width: 100%; box-sizing: border-box;">
             🟢 JOIN TO REVEAL
         </a>
     </div>
-
 </div>
 
 <script>
+  // UPDATED WITH YOUR NEW DEPLOYMENT LINK
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbzzzP7KIUr1GkW5et05N3qmxkQyfV_JDA5d1rkpNEnJLB9EQUHlRBTnERL4ojUZVdl5/exec"; 
   const urlParams = new URLSearchParams(window.location.search);
-  const SHOP_ID = urlParams.get('shop') || 'RAJAGARMENTS'; 
+  const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
   const savedMobile = localStorage.getItem("revizo_mobile");
 
-  // ZERO-FLICKER KILL SWITCH
+  let systemData = {};
+
   if (!savedMobile) {
       window.location.replace("index.html" + window.location.search);
   } else {
-      document.body.style.display = "flex"; // Show exactly centered
+      document.body.style.display = "flex"; 
   }
 
-  // STEP 2: UNLOCK FUNCTION
   function unlockWallet() {
       document.getElementById("waGateOverlay").style.display = "none";
-      localStorage.setItem("wa_joined_gate", "true"); // System memory: Never force them again!
+      localStorage.setItem("wa_joined_gate", "true"); 
   }
 
-  // ULTIMATE "SCORCHED EARTH" LOGOUT FUNCTION
   function secureLogout() {
-      // Shield: Prevent double clicks
       var lBtn = document.getElementById("logoutBtn");
-      lBtn.disabled = true;
-      lBtn.innerHTML = "⏳ CLEARING...";
-      
-      // Visual Kill: Instantly fade screen to hide processing
+      lBtn.disabled = true; lBtn.innerHTML = "⏳ CLEARING...";
       document.body.style.opacity = '0';
       
-      // Execute Advanced Clear after a microscopic delay
       setTimeout(() => {
-          // targeted burn + carpet bomb
-          localStorage.removeItem("revizo_mobile");
-          localStorage.removeItem("revizo_category");
-          localStorage.removeItem("wa_joined_gate"); // Reset the WhatsApp gate on logout
-          localStorage.clear();
-          sessionStorage.clear();
+          localStorage.removeItem("revizo_mobile"); localStorage.removeItem("revizo_category"); localStorage.removeItem("wa_joined_gate"); 
+          localStorage.clear(); sessionStorage.clear();
           
-          // Preserves your URL parameters while adding the cache-busting timestamp
-          let searchParams = window.location.search;
-          let separator = searchParams ? "&" : "?";
+          let searchParams = window.location.search; let separator = searchParams ? "&" : "?";
           const freshUrl = "index.html" + searchParams + separator + "nocache=" + Date.now();
-          
-          // History Eraser & Exit
-          window.history.replaceState(null, null, freshUrl);
-          window.location.replace(freshUrl);
+          window.history.replaceState(null, null, freshUrl); window.location.replace(freshUrl);
       }, 50);
   }
 
-  const VISITOR_LINKS = {
-      "default": "https://wa.me/919811026506",
-      "16 to 20": "https://wa.me/919811026506",
-      "21 to 25": "https://wa.me/919811026506",
-      "26 to 35": "https://wa.me/919811026506",
-      "36 to 44": "https://wa.me/919811026506",
-      "45 to 55": "https://wa.me/919811026506"
-  };
+  window.rateShop = function(stars) {
+      if(stars <= 3) {
+          if(systemData.ownerFeedbackWA) {
+              let text = encodeURIComponent("Hi, I recently visited " + (systemData.shopName || "your shop") + " and my experience wasn't a 5-star one. Here is my feedback: ");
+              window.open("https://wa.me/" + systemData.ownerFeedbackWA + "?text=" + text, "_blank");
+          } else { alert("Thank you for your feedback."); }
+      } else {
+          if(systemData.googleReviewLink) {
+              window.open(systemData.googleReviewLink, "_blank");
+          } else { alert("Thank you for the 5 stars!"); }
+      }
+  }
 
-  // ANTI-FRAUD LIVE CLOCK
   setInterval(function() {
     let clockElement = document.getElementById('live-time');
     if (clockElement && clockElement.style.display === "block") {
@@ -178,15 +195,21 @@
 
   window.onload = function() {
     if (!savedMobile) return;
+    
+    fetch(REVIZO_API + "?action=getShopMeta&shopId=" + SHOP_ID).then(r=>r.json()).then(meta => {
+        if(meta.logoUrl) {
+            let logoImg = document.getElementById("shopLogo");
+            logoImg.src = meta.logoUrl;
+            logoImg.style.display = "inline-block";
+        }
+    });
 
     fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile)
       .then(r => r.json()).then(d => { 
-          // EXPIRED STATUS CATCHER ADDED HERE
           if(d.status !== "NOT_FOUND" && d.status !== "EXPIRED") {
+              systemData = d; 
               showRewards(d); 
-          } else { 
-              secureLogout(); // Automatically trigger advanced logout if not found or if expired auto-burn triggered
-          } 
+          } else { secureLogout(); } 
       }).catch(() => { alert("Network Error Loading Wallet"); });
   };
 
@@ -200,24 +223,17 @@
     
     fetch(REVIZO_API + "?action=submitVisit&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(data => {
       if(data.status === "RATE_LIMITED") { alert("Too many requests."); btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; return; }
-      
-      // ANTI-FRAUD 24 HOUR LOCK
       if (data.status === "ALREADY_APPROVED") {
-        btn.innerHTML = "⏳ COME BACK TOMORROW";
-        btn.disabled = true;
+        btn.innerHTML = "⏳ COME BACK TOMORROW"; btn.disabled = true;
         document.getElementById("visitStatus").innerText = "✅ Limit Reached For Today"; 
-        document.getElementById("visitStatus").className = "status-badge bg-success";
-        return;
+        document.getElementById("visitStatus").className = "status-badge bg-success"; return;
       }
-
       if (data.status === "SUCCESS" || data.status === "ALREADY_PENDING") {
         btn.innerHTML = "⏳ WAITING...";
         document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
         document.getElementById("visitStatus").className = "status-badge bg-warning";
         waitForCashier(savedMobile);
-      } else { 
-        fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(showRewards); 
-      }
+      } else { fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(showRewards); }
     }).catch(() => { btn.disabled=false; btn.innerHTML="📍 I'M AT THE SHOP - LOG VISIT"; alert("Network error."); });
   }
 
@@ -233,75 +249,83 @@
     document.getElementById("step-loading").classList.remove('active'); 
     document.getElementById("step-wallet").classList.add('active');
     
-    if(data.customerName) {
-        document.getElementById("greetingText").innerText = "Hello, " + data.customerName.split(" ")[0] + "!";
-    }
+    if(data.customerName) { document.getElementById("greetingText").innerText = "Hello, " + data.customerName.split(" ")[0] + "!"; }
     
-    // STEP 3: AGE-SPECIFIC WHATSAPP LINK ACTIVATION WITH FROSTED GLASS TRIGGER
+    if(data.couponPrice) {
+        document.getElementById("staticCouponText").innerText = data.couponPrice;
+        document.getElementById("staticCouponBox").style.display = "block";
+    }
+
+    let showSocials = false;
+    
+    if(data.ownerFeedbackWA) { document.getElementById("btnWaChat").href = "https://wa.me/" + data.ownerFeedbackWA; document.getElementById("btnWaChat").style.display = "flex"; showSocials = true; }
+    if(data.instaLink) { document.getElementById("btnInsta").href = data.instaLink; document.getElementById("btnInsta").style.display = "flex"; showSocials = true; }
+    if(data.websiteLink) { document.getElementById("btnWeb").href = data.websiteLink; document.getElementById("btnWeb").style.display = "flex"; showSocials = true; }
+    
+    if(showSocials) { document.getElementById("socialBox").style.display = "flex"; }
+
+    if(data.googleReviewLink || data.ownerFeedbackWA) {
+        document.getElementById("reviewBox").style.display = "block";
+    }
+
+    let exDays = data.exchangeDays || "7";
+    document.getElementById("exchangeText").innerText = "* Exchanges/Returns valid for strictly " + exDays + " days from purchase.";
+
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
-    let waLink = data.dynamicWaLink || VISITOR_LINKS[cat] || VISITOR_LINKS["default"];
+    let waLink = data.dynamicWaLink; 
     
     if(waLink && !waLink.includes("PASTE_LINK")) {
         document.getElementById("dynamicWaGateLink").href = waLink;
-        // Only drop the glass if they have never joined before!
-        if(!localStorage.getItem("wa_joined_gate")) {
-            document.getElementById("waGateOverlay").style.display = "flex";
-        }
+        if(!localStorage.getItem("wa_joined_gate")) { document.getElementById("waGateOverlay").style.display = "flex"; }
     }
     
     let sCount = data.stamps || 0; 
     let vText = data.voucher ? data.voucher.toString().toUpperCase() : "";
     
-    // CUSTOM REWARD DISPLAY FORMATTER
-    if(vText === "N/A") {
-        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px; color: #111;'>Visit Logged! Earn ₹50 next time.</span>";
+    if(vText === "N/A" || vText === "") {
+        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px;'>Visit Logged! Keep visiting.</span>";
     } else if (vText === "GIFT") {
-        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 22px; color: #000;'>🎁 Gift Earned!</span>";
+        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 22px;'>🎁 Gift Earned!</span>";
     } else if(vText === "TRY AGAIN" || vText === "JACKPOT" || vText.includes("FREE")) {
-        document.getElementById("revVoucher").innerHTML = `<span style='color: #000;'>${vText}</span>`;
+        document.getElementById("revVoucher").innerHTML = vText;
     } else {
-        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px; opacity: 0.8; color: #222;'>₹</span> <span style='color: #000;'>" + vText + "</span> <span style='font-size: 14px; opacity: 0.8; color: #222;'>OFF</span><br><span style='font-size: 12px; font-weight: 800; color: #333; letter-spacing: 0.5px;'>*Min. purchase ₹499</span>";
+        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px; opacity: 0.8;'>₹</span> " + vText + " <span style='font-size: 14px; opacity: 0.8;'>OFF</span>";
     }
-    
     document.getElementById("stampCountText").innerText = sCount;
     
-    // CUSTOM PRICING FOR VISITS (0 on 1st, Exact ₹ amounts on 2nd-4th, Gift on 5th)
-    const rewardPrices = [0, 50, 75, 100, 150]; 
+    let rewardsArr = data.milestoneRewards ? data.milestoneRewards.split(',') : ["N/A", "50", "75", "100", "GIFT"];
     let journeyHTML = ""; 
     for(let i = 1; i <= 5; i++) {
+      let rwdText = rewardsArr[i-1] || "Reward";
+      
       if(i <= sCount) {
         if(i === 1) {
             journeyHTML += `<div class="visit-row">✅ VISIT 1 <span class="tag-done">Joined</span></div>`;
         } else if (i === 5) {
             journeyHTML += `<div class="visit-row">✅ VISIT 5 <span class="tag-done">🎁 Gift Claimed</span></div>`;
         } else {
-            journeyHTML += `<div class="visit-row">✅ VISIT ${i} <span class="tag-done">₹${rewardPrices[i-1]} Redeemed</span></div>`;
+            journeyHTML += `<div class="visit-row">✅ VISIT ${i} <span class="tag-done">Earned ${rwdText}</span></div>`;
         }
       } else if (i === 5) {
-        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT 5 <span class="tag-surprise">🎁 GIFT REWARD</span></div>`;
+        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT 5 <span class="tag-surprise">🎁 SURPRISE</span></div>`;
       } else {
-        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT ${i} <span style="font-size:12px; color: #999;">₹${rewardPrices[i-1]} Reward</span></div>`;
+        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT ${i} <span style="font-size:12px;">${rwdText} Reward</span></div>`;
       }
     }
     document.getElementById("journeyList").innerHTML = journeyHTML;
-    
     document.getElementById("congratsBox").style.display = (sCount >= 5) ? "block" : "none";
     
     let nBtn = document.getElementById("newStampBtn");
-    
     if(data.status === "APPROVED" || data.status === "CLAIMED") {
       document.getElementById("visitStatus").innerText = "✅ Loyalty Card Up to Date"; 
       document.getElementById("visitStatus").className = "status-badge bg-success";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ COME BACK TOMORROW";
-
-      // TRIGGER ANTI-FRAUD ANIMATION ON ACTIVE VOUCHER
       document.getElementById("voucher-box").classList.add("anti-fraud-pulse");
       document.getElementById("live-time").style.display = "block";
     } else if (data.status === "PENDING") {
       document.getElementById("visitStatus").innerText = "⏳ Waiting for cashier..."; 
       document.getElementById("visitStatus").className = "status-badge bg-warning";
-      nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING...";
-      waitForCashier(savedMobile);
+      nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING..."; waitForCashier(savedMobile);
     } else {
       nBtn.disabled = false; nBtn.innerHTML = "📍 I'M AT THE SHOP - LOG VISIT";
     }
