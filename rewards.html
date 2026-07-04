@@ -8,13 +8,11 @@
   :root { --bg: #f0f4f8; --card: #ffffff; --text: #000000; }
   @media (prefers-color-scheme: dark) { :root { --bg: #1a1a1a; --card: #252525; --text: #ffffff; } }
 
-  /* ZERO FLICKER & FADE OUT READY */
   body { display: none; font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; justify-content: center; overflow-x: hidden; min-height: 90vh; align-items: center; transition: opacity 0.1s ease, background-color 0.5s; opacity: 1; }
   
   .container { width: 100%; max-width: 440px; background: var(--card); padding: 20px 15px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; box-sizing: border-box; margin: auto; display: none; }
   .active { display: block; }
   
-  /* 2050 FULL GLOSSY BUTTONS */
   .btn-2050 { position: relative; width: 100%; padding: 18px 10px; border-radius: 20px; font-size: 17px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(255, 255, 255, 0.5); cursor: pointer; overflow: hidden; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); box-sizing: border-box; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-top: 15px; display: block; }
   .btn-2050::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0)); border-radius: 20px 20px 100px 100px / 20px 20px 25px 25px; pointer-events: none; }
   .btn-2050:active { transform: scale(0.95); }
@@ -40,7 +38,6 @@
   
   .congrats-box { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 20px; border-radius: 15px; margin-top: 15px; margin-bottom: 15px; color: #000; box-shadow: 0 5px 15px rgba(255,165,0,0.4); animation: popIn 0.5s ease; border: 2px solid #fff; display: none;}
   
-  /* Social & Feedback Styles */
   .social-grid { display: flex; gap: 10px; margin-top: 15px; justify-content: center; flex-wrap: wrap; }
   .chip { padding: 10px 15px; border-radius: 30px; font-size: 13px; font-weight: bold; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: transform 0.2s; }
   .chip:active { transform: scale(0.95); }
@@ -125,7 +122,6 @@
   <div id="exchangeText" style="font-size: 11px; color: #888; margin-top: 15px; font-weight: bold;"></div>
 </div>
 
-<!-- FROSTED GLASS OVERLAY -->
 <div id="waGateOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;">
     <div style="background: white; padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 320px; width: 100%; box-sizing: border-box; margin: auto;">
         <div style="font-size: 42px; margin-bottom: 5px;">🎁</div>
@@ -139,10 +135,9 @@
 </div>
 
 <script>
-  // UPDATED WITH YOUR NEW DEPLOYMENT LINK
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbzzzP7KIUr1GkW5et05N3qmxkQyfV_JDA5d1rkpNEnJLB9EQUHlRBTnERL4ojUZVdl5/exec"; 
   const urlParams = new URLSearchParams(window.location.search);
-  const SHOP_ID = urlParams.get('shop') || 'NEWRIWAZ'; 
+  const SHOP_ID = urlParams.get('shop') || 'RAJAGARMENTS'; 
   const savedMobile = localStorage.getItem("revizo_mobile");
 
   let systemData = {};
@@ -333,4 +328,3 @@
 </script>
 </body>
 </html>
-
