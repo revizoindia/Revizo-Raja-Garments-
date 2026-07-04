@@ -1,6 +1,6 @@
 {
-  "name": "Raja Garments Cashier",
-  "short_name": "Raja Cashier",
+  "name": "Revizo Cashier Terminal",
+  "short_name": "Revizo",
   "start_url": "./cashier.html",
   "display": "standalone",
   "background_color": "#0a0a0a",
