@@ -61,7 +61,7 @@
 <div id="cashier-view" style="width: 100%; max-width: 500px;">
   
   <div id="cashier-login" class="card active">
-    <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 100px; border-radius: 20px; margin-bottom: 15px; object-fit: contain;">
+    <img id="loginLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 100px; border-radius: 20px; margin-bottom: 15px; object-fit: contain;">
     <h2 style="margin-top:0; color: #d4af37;">Cashier Terminal</h2>
     <p style="opacity:0.7;">Enter 4-Digit PIN</p>
     <input type="password" id="pinInput" class="pin-input" maxlength="4" placeholder="••••" inputmode="numeric">
@@ -70,7 +70,7 @@
 
   <div id="cashier-dashboard" class="card" style="display:none; text-align: left;">
     <div style="text-align:center; margin-bottom:20px;">
-      <img src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 60px; border-radius: 15px; margin-bottom: 10px; object-fit: contain;">
+      <img id="dashLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 60px; border-radius: 15px; margin-bottom: 10px; object-fit: contain;">
       <h2 style="margin:0; color: #d4af37;">🛒 Dashboard</h2>
     </div>
     
@@ -98,6 +98,15 @@
   let authToken = localStorage.getItem('revizo3_auth_' + SHOP_ID) || '';
 
   window.onload = function() {
+    // THIS FETCH MAKES THE CASHIER TERMINAL LOGOS DYNAMIC
+    fetch(REVIZO_API + "?action=getShopMeta&shopId=" + SHOP_ID)
+      .then(r => r.json()).then(meta => { 
+        if(meta.logoUrl) {
+            document.getElementById('loginLogo').src = meta.logoUrl;
+            document.getElementById('dashLogo').src = meta.logoUrl;
+        }
+      });
+
     if(authToken) launchDashboard();
   };
 
