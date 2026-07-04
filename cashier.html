@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Cashier Terminal</title>
-  <meta name="mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="application-name" content="Revizo">
 <meta name="apple-mobile-web-app-title" content="Revizo">
@@ -12,7 +12,7 @@
 
 <link rel="apple-touch-icon" href="https://i.ibb.co/KjkyPZXX/IMG-20260610-225132.jpg">
 <link rel="icon" type="image/png" href="https://i.ibb.co/KjkyPZXX/IMG-20260610-225132.jpg">
-  <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
   
 <style>
   /* UPDATED COLORS: Dark Background with Gold Boxes */
@@ -43,6 +43,17 @@
   .btn-reject:active { transform: scale(0.95); }
   .pin-input { width: 100%; padding: 16px; font-size: 28px; text-align: center; letter-spacing: 12px; border-radius: 14px; border: 2px solid var(--border); background: #222; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); color: var(--text); margin-bottom: 20px; outline: none; transition: 0.3s; }
   .pin-input:focus { border-color: #f1c40f; }
+
+  /* INJECTED CSS FOR E-RECEIPT UI & EXACT-DAY CRM ALERTS */
+  .flex-col { flex-direction: column; align-items: stretch; }
+  .e-receipt-box { display: flex; gap: 8px; margin-bottom: 8px; width: 100%; }
+  .cashier-input { flex: 1; background: #222; border: 1px solid rgba(212, 175, 55, 0.4); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 15px; font-weight: bold; outline: none; }
+  .cashier-input:focus { border-color: var(--border); }
+  .btn-camera { background: #333; border: 1px solid rgba(212, 175, 55, 0.4); color: #fff; border-radius: 10px; width: 45px; font-size: 18px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; }
+  .btn-camera:active { transform: scale(0.9); }
+  .photo-status { font-size: 12px; margin-bottom: 12px; text-align: left; font-weight: bold; display: none; }
+  @keyframes pulseAlert { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+  .pulse-text { animation: pulseAlert 1.5s infinite; }
 </style>
 </head>
 <body>
@@ -116,12 +127,45 @@
       });
   }
 
+  // INJECTED FEATURE 6: API call to mark reminders as completed
+  function markReminderSent(mobile, type) {
+    fetch(REVIZO_API + "?action=markReminderSent&shopId=" + SHOP_ID + "&mobile=" + mobile + "&type=" + encodeURIComponent(type))
+      .then(() => setTimeout(loadPending, 1000));
+  }
+
   function renderList(pending, reminders) {
     const list = document.getElementById('pendingList'); list.innerHTML = '';
+    
     if(pending && pending.length > 0) {
-      pending.forEach(num => {
+      pending.forEach(item => {
+        // Handle mapped data objects safely
+        let num = item.mobile || item; 
+        let cName = item.name || "New Customer";
         const masked = '******' + String(num).slice(-4);
-        list.innerHTML += `<div class='list-card' id='card-${num}'><div style='font-size:20px; font-weight:bold;'>${masked}</div><div style='display:flex; gap:8px;'><button class='btn-reject' onclick='rejectReq("${num}")'>❌</button><button class='btn-approve' onclick='approveReq("${num}")'>✓ APPROVE</button></div></div>`;
+        
+        // INJECTED FEATURE 8 & 9: E-Receipt Interface
+        list.innerHTML += `
+        <div class='list-card flex-col' id='card-${num}'>
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:12px;">
+            <div>
+              <div style="font-size:12px; color:#d4af37; text-transform:uppercase; font-weight:bold;">${cName}</div>
+              <div style='font-size:20px; font-weight:bold;'>${masked}</div>
+            </div>
+          </div>
+          
+          <div class="e-receipt-box">
+            <input type="number" id="bill-${num}" class="cashier-input" placeholder="₹ Bill Amount (Optional)">
+            <button class="btn-camera" onclick="document.getElementById('file-${num}').click()">📸</button>
+            <input type="file" id="file-${num}" accept="image/*" capture="environment" style="display:none" onchange="handlePhotoUpload('${num}')">
+            <input type="hidden" id="photo-url-${num}">
+          </div>
+          <div id="photo-status-${num}" class="photo-status"></div>
+
+          <div style='display:flex; gap:8px; width:100%; margin-top:5px;'>
+            <button class='btn-reject' style='flex:1;' onclick='rejectReq("${num}")'>❌ REJECT</button>
+            <button class='btn-approve' style='flex:2;' onclick='approveReq("${num}")'>✓ APPROVE</button>
+          </div>
+        </div>`;
       });
     } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
     
@@ -129,21 +173,82 @@
     if(reminders && reminders.length > 0) {
       document.getElementById('remindersSection').style.display = 'block';
       reminders.forEach(rem => {
-        
-        // BULLETPROOF WHATSAPP NUMBER CLEANER
         let cleanMobile = String(rem.mobile).replace(/\D/g, '');
         if (cleanMobile.length === 10) { cleanMobile = '91' + cleanMobile; }
 
-        const msg = encodeURIComponent(`Hi ${rem.name}! Your ${rem.type} is ${rem.time} away! Claim VIP offers at the store.`);
+        // INJECTED FEATURE 7: Exact-Day Flashing Badge Logic
+        let isWishToday = (rem.time === 'WISH TODAY!');
+        let timeStyle = isWishToday ? "color:#ff3b30; font-weight:900;" : "color:#d4af37;";
+        let borderStyle = isWishToday ? "border-color:#ff3b30;" : "";
+        let pulseClass = isWishToday ? "pulse-text" : "";
+        let iconBadge = isWishToday ? "🎉" : "📅";
+
+        const msg = encodeURIComponent(`Hi ${rem.name}! Your ${rem.type} is ${isWishToday ? 'TODAY' : rem.time + ' away'}! Claim VIP offers at the store.`);
+        const clickAction = `markReminderSent('${rem.mobile}', '${rem.type}'); window.open('https://wa.me/${cleanMobile}?text=${msg}', '_blank'); return false;`;
         
-        remList.innerHTML += `<div class='list-card crm-card'><div><div style='font-weight:bold;'>${rem.name}</div><div style='font-size:12px; color:#d4af37;'><b>${rem.time}</b> to ${rem.type}</div></div><a href='https://wa.me/${cleanMobile}?text=${msg}' target='_blank' style='background:#25D366; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);'>💬 MSG</a></div>`;
+        remList.innerHTML += `
+        <div class='list-card crm-card' style='${borderStyle}'>
+          <div>
+            <div style='font-weight:bold;'>${rem.name}</div>
+            <div class='${pulseClass}' style='font-size:12px; ${timeStyle}'><b>${iconBadge} ${rem.time}</b> to ${rem.type}</div>
+          </div>
+          <a href='#' onclick="${clickAction}" style='background:#25D366; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);'>💬 MSG</a>
+        </div>`;
       });
     } else { document.getElementById('remindersSection').style.display = 'none'; }
   }
 
+  // INJECTED FEATURE 8: Photo Resizing & Google Drive Uploader
+  function handlePhotoUpload(mobile) {
+    let fileInput = document.getElementById('file-' + mobile);
+    let status = document.getElementById('photo-status-' + mobile);
+    let urlInput = document.getElementById('photo-url-' + mobile);
+    if (!fileInput.files || !fileInput.files[0]) return;
+    
+    status.innerText = "⏳ Uploading to Secure Drive..."; status.style.color = "#f1c40f"; status.style.display = "block";
+    
+    let file = fileInput.files[0];
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        let img = new Image();
+        img.onload = function() {
+            let canvas = document.createElement('canvas');
+            let w = img.width, h = img.height, maxSize = 800;
+            if(w > maxSize) { h = Math.round(h * maxSize / w); w = maxSize; }
+            canvas.width = w; canvas.height = h;
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            
+            // Base64 Compression for secure POST
+            let base64 = canvas.toDataURL('image/jpeg', 0.6).split(',')[1];
+            let payload = new URLSearchParams();
+            payload.append("action", "uploadPhoto");
+            payload.append("fileName", "Receipt_" + mobile + "_" + Date.now() + ".jpg");
+            payload.append("fileData", base64);
+            
+            fetch(REVIZO_API, { method: 'POST', body: payload })
+            .then(r => r.json()).then(d => {
+                if(d.success) {
+                    urlInput.value = d.url;
+                    status.innerText = "✅ Proof Attached!"; status.style.color = "#25D366";
+                } else {
+                    status.innerText = "❌ Upload Failed (Check doPost setup)"; status.style.color = "#ff5252";
+                }
+            }).catch(() => { status.innerText = "❌ Network Error"; status.style.color = "#ff5252"; });
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // INJECTED FEATURE 9: Passing E-Receipt Data to Server
   function approveReq(mobile) {
+    let billAmt = document.getElementById('bill-' + mobile) ? document.getElementById('bill-' + mobile).value : "";
+    let photoUrl = document.getElementById('photo-url-' + mobile) ? document.getElementById('photo-url-' + mobile).value : "";
+    
     document.getElementById('card-'+mobile).style.opacity = '0.5';
-    fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { if(d.success) document.getElementById('card-'+mobile).remove(); loadPending(); });
+    fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken + "&billAmount=" + encodeURIComponent(billAmt) + "&photoUrls=" + encodeURIComponent(photoUrl))
+    .then(r => r.json()).then(d => { if(d.success) document.getElementById('card-'+mobile).remove(); loadPending(); });
   }
 
   function rejectReq(mobile) {
