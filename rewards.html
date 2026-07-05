@@ -255,7 +255,6 @@
     
     if(data.instaLink) { document.getElementById("btnInsta").href = data.instaLink; document.getElementById("btnInsta").style.display = "flex"; showSocials = true; }
     
-    // DYNAMIC WHATSAPP MESSAGE LOGIC
     if(data.ownerFeedbackWA) { 
         let shopNm = data.shopName || "Raja Garments";
         document.getElementById("btnWaChat").href = "https://wa.me/" + data.ownerFeedbackWA + "?text=Hi,%20" + encodeURIComponent(shopNm); 
@@ -284,12 +283,22 @@
     
     let sCount = data.stamps || 0; 
     let vText = data.voucher ? data.voucher.toString().toUpperCase() : "";
-    
-    // DYNAMIC MIN PURCHASE LOGIC
     let minPur = data.minPurchase ? data.minPurchase : "499";
     
+    // SMART REWARD CALCULATOR
+    let rewardsArr = data.milestoneRewards ? data.milestoneRewards.split(',') : ["N/A", "50", "75", "100", "GIFT"];
+    let nextReward = "50"; 
+    
+    // Ye line automatically check karti hai ki customer kaunse step par hai aur agli value kya hai
+    if (sCount < 5 && rewardsArr[sCount]) {
+        nextReward = rewardsArr[sCount].trim();
+    }
+    
+    let earnText = nextReward.toUpperCase().includes("GIFT") ? "Earn a 🎁 SURPRISE next time." : "Earn ₹" + nextReward + " next time.";
+
+    // UPDATE: Khali aane par ab dynamically ₹25 (ya jo bhi next ho) dikhayega aur Min Purchase bhi pakka dikhayega!
     if(vText === "N/A" || vText === "") {
-        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px;'>Visit Logged! Earn ₹50 next time.</span>";
+        document.getElementById("revVoucher").innerHTML = "<span style='font-size: 16px;'>Visit Logged! " + earnText + "</span><br><span style='font-size: 12px; font-weight: 800; color: #e0f7fa; letter-spacing: 0.5px;'>*Min. purchase ₹" + minPur + "</span>";
     } else if (vText === "GIFT") {
         document.getElementById("revVoucher").innerHTML = "<span style='font-size: 22px;'>🎁 Gift Earned!</span>";
     } else if(vText === "TRY AGAIN" || vText === "JACKPOT" || vText.includes("FREE")) {
@@ -300,7 +309,6 @@
 
     document.getElementById("stampCountText").innerText = sCount;
     
-    let rewardsArr = data.milestoneRewards ? data.milestoneRewards.split(',') : ["N/A", "50", "75", "100", "GIFT"];
     let journeyHTML = ""; 
     for(let i = 1; i <= 5; i++) {
       let rwdText = rewardsArr[i-1] || "Reward";
@@ -311,12 +319,12 @@
         } else if (i === 5) {
             journeyHTML += `<div class="visit-row">✅ VISIT 5 <span class="tag-done">🎁 Gift Claimed</span></div>`;
         } else {
-            journeyHTML += `<div class="visit-row">✅ VISIT ${i} <span class="tag-done">Earned ${rwdText}</span></div>`;
+            journeyHTML += `<div class="visit-row">✅ VISIT ${i} <span class="tag-done">Earned ₹${rwdText}</span></div>`;
         }
       } else if (i === 5) {
         journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT 5 <span class="tag-surprise">🎁 SURPRISE</span></div>`;
       } else {
-        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT ${i} <span style="font-size:12px;">${rwdText} Reward</span></div>`;
+        journeyHTML += `<div class="visit-row" style="opacity: 0.6;">⬜ VISIT ${i} <span style="font-size:12px;">₹${rwdText} Reward</span></div>`;
       }
     }
     document.getElementById("journeyList").innerHTML = journeyHTML;
