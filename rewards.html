@@ -79,7 +79,7 @@
   </div>
 
   <div id="voucher-box" class="fancy-card c-light-purple">
-    <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">EARNED VOUCHER (VALID NEXT VISIT)</div>
+    <div style="font-size: 14px; opacity: 1; font-weight: 900; letter-spacing: 1px;">YOUR NEXT-BUY COUPON</div>
     <div id="revVoucher" style="font-size: 22px; font-weight: 900; margin-top: 4px;">...</div>
     <div id="live-time" class="live-clock"></div>
   </div>
@@ -112,9 +112,9 @@
   </div>
 
   <div id="socialBox" class="social-grid" style="display: none;">
-      <a id="btnWaChat" href="#" target="_blank" class="chip chip-wa" style="display: none;">💬 WHATSAPP US</a>
-      <a id="btnInsta" href="#" target="_blank" class="chip chip-insta" style="display: none;">📸 FOLLOW US</a>
-      <a id="btnWeb" href="#" target="_blank" class="chip chip-web" style="display: none;">🌐 OUR WEBSITE</a>
+    <a id="btnInsta" href="#" target="_blank" class="chip chip-insta" style="display: none;">📸 FOLLOW ON INSTAGRAM</a>  
+    <a id="btnWaChat" href="#" target="_blank" class="chip chip-wa" style="display: none;">💬 WHATSAPP US</a>
+    <a id="btnWeb" href="#" target="_blank" class="chip chip-web" style="display: none;">🌐 OUR WEBSITE</a>
   </div>
 
   <button id="logoutBtn" onclick="secureLogout()" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
@@ -126,10 +126,10 @@
     <div style="background: white; padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 320px; width: 100%; box-sizing: border-box; margin: auto;">
         <div style="font-size: 42px; margin-bottom: 5px;">🎁</div>
         <h2 style="color: #333; margin: 0 0 8px 0; font-family: sans-serif; font-size: 22px; font-weight: 800;">Rewards Locked</h2>
-        <p style="color: #666; margin: 0 0 20px 0; font-family: sans-serif; font-size: 14px; line-height: 1.4;">Join WhatsApp to instantly reveal your REWARDS 🎁!</p>
+        <p style="color: #666; margin: 0 0 20px 0; font-family: sans-serif; font-size: 14px; line-height: 1.4;"></p>
         
         <a href="#" id="dynamicWaGateLink" onclick="unlockWallet()" target="_blank" style="display: block; background-color: #25D366; color: white; padding: 14px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 900; font-family: sans-serif; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4); width: 100%; box-sizing: border-box;">
-            🟢 JOIN For REWARDS 
+            🎁 WHATSAPP REWARDS 
         </a>
     </div>
 </div>
@@ -171,7 +171,7 @@
   window.rateShop = function(stars) {
       if(stars <= 3) {
           if(systemData.ownerFeedbackWA) {
-              let text = encodeURIComponent("Hi, I recently visited " + (systemData.shopName || "your shop") + " and my experience wasn't a 5-star one. Here is my feedback: ");
+              let text = encodeURIComponent("Hi, I visited " + (systemData.shopName || "your shop") + " and my experience wasn't good. Here is my suggestion: ");
               window.open("https://wa.me/" + systemData.ownerFeedbackWA + "?text=" + text, "_blank");
           } else { alert("Thank you for your feedback."); }
       } else {
@@ -264,7 +264,7 @@
     }
 
     let exDays = data.exchangeDays || "7";
-    document.getElementById("exchangeText").innerText = "* Exchanges/Returns valid for strictly " + exDays + " days from purchase.";
+    document.getElementById("exchangeText").innerText = "* Exchanges valid for " + exDays + " days from purchase.";
 
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
     let waLink = data.dynamicWaLink; 
