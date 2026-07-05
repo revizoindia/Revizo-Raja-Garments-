@@ -1,3 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Cashier Terminal</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Revizo">
+<meta name="apple-mobile-web-app-title" content="Revizo">
+<meta name="theme-color" content="#0a0a0a">
+
+<link rel="apple-touch-icon" href="https://i.ibb.co/KjkyPZXX/IMG-20260610-225132.jpg">
+<link rel="icon" type="image/png" href="https://i.ibb.co/KjkyPZXX/IMG-20260610-225132.jpg">
+<link rel="manifest" href="manifest.json">
+
+<style>
+  * { box-sizing: border-box; }
+  :root { --bg: #0a0a0a; --card: #1a1a1a; --border: #d4af37; --text: #ffffff; }
+  @media (prefers-color-scheme: light) { :root { --bg: #0a0a0a; --card: #1a1a1a; --border: #d4af37; --text: #ffffff; } }
+
+  body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 40px 15px 15px 15px; display: flex; justify-content: center; align-items: flex-start; min-height: 90vh; overflow-x: hidden; }
+  
+  .card { background: var(--card); width: 100%; max-width: 500px; padding: 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); border: 1px solid var(--border); text-align: center; display: none; margin: 0 auto; }
+  .active { display: block; }
+  
+  .futuristic-btn { position: relative; border: 2px solid var(--border); border-radius: 50px; color: #ffffff !important; font-weight: 900; font-size: clamp(16px, 4vw, 20px); letter-spacing: 1px; padding: 18px 20px; width: 100%; cursor: pointer; background: #1a1a1a; transition: all 0.3s ease; }
+  .futuristic-btn:active { transform: scale(0.95) !important; }
+
+  .stats-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+  .stat-box { flex: 1; background: rgba(212, 175, 55, 0.05); border: 1px solid var(--border); padding: 15px; border-radius: 12px; text-align: center; }
+  .stat-num { font-size: 24px; font-weight: 900; color: #d4af37; }
+  .list-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.4); padding: 18px 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left; width: 100%; }
+  .crm-card { border-left: 4px solid var(--border); }
+  .btn-approve { background: #25D366; color: white; border: none; padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
+  .btn-approve:active { transform: scale(0.95); }
+  .btn-reject { background: rgba(255,59,48,0.2); color: #ff3b30; border: 1px solid rgba(255,59,48,0.5); padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
+  .btn-reject:active { transform: scale(0.95); }
+  .pin-input { width: 100%; padding: 16px; font-size: 28px; text-align: center; letter-spacing: 12px; border-radius: 14px; border: 2px solid var(--border); background: #222; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); color: var(--text); margin-bottom: 20px; outline: none; transition: 0.3s; }
+  .pin-input:focus { border-color: #f1c40f; }
+
+  .flex-col { flex-direction: column; align-items: stretch; }
+  .e-receipt-box { display: flex; gap: 8px; margin-bottom: 8px; width: 100%; }
+  .cashier-input { flex: 1; background: #222; border: 1px solid rgba(212, 175, 55, 0.4); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 15px; font-weight: bold; outline: none; width: 100%; }
+  .cashier-input:focus { border-color: var(--border); }
+  .btn-camera { background: #333; border: 1px solid rgba(212, 175, 55, 0.4); color: #fff; border-radius: 10px; width: 50px; font-size: 18px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
+  .btn-camera:active { transform: scale(0.9); }
+  .photo-status { font-size: 13px; margin-bottom: 12px; text-align: left; font-weight: bold; display: none; }
+  @keyframes pulseAlert { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+  .pulse-text { animation: pulseAlert 1.5s infinite; }
+</style>
+</head>
+<body>
+
+<div id="cashier-view" style="width: 100%; max-width: 500px;">
+  
+  <div id="cashier-login" class="card active">
+    <img id="loginLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 100px; border-radius: 20px; margin-bottom: 15px; object-fit: contain;">
+    <h2 style="margin-top:0; color: #d4af37;">Cashier Terminal</h2>
+    <p style="opacity:0.7;">Enter 4-Digit PIN</p>
+    <input type="password" id="pinInput" class="pin-input" maxlength="4" placeholder="••••" inputmode="numeric">
+    <button id="unlockBtn" class="futuristic-btn" onclick="unlockDashboard()">UNLOCK TERMINAL</button>
+  </div>
+
+  <div id="cashier-dashboard" class="card" style="display:none; text-align: left;">
+    <div style="text-align:center; margin-bottom:20px;">
+      <img id="dashLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 60px; border-radius: 15px; margin-bottom: 10px; object-fit: contain;">
+      <h2 style="margin:0; color: #d4af37;">🛒 Dashboard</h2>
+    </div>
+    
+    <div class="stats-bar">
+      <div class="stat-box"><div class="stat-num" id="statToday">⏳</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Visits Today</div></div>
+      <div class="stat-box"><div class="stat-num" id="statVIPs" style="color:#d4af37;">⏳</div><div style="font-size:11px; text-transform:uppercase; opacity:0.7;">Total VIPs</div></div>
+    </div>
+    
+    <div id="remindersSection" style="display:none; margin-bottom:25px;">
+      <h3 style="color:#d4af37; font-size:14px; text-transform:uppercase;">📅 CRM Event Alerts</h3>
+      <div id="reminderList"></div>
+    </div>
+    
+    <h3 style="color:#d4af37; font-size:14px; text-transform:uppercase;">⏳ Pending Verifications</h3>
+    <div id="pendingList">
+      <div style='color:#888; text-align:center;'>Fetching live data...</div>
+    </div>
+  </div>
+</div>
+
 <script>
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbzzzP7KIUr1GkW5et05N3qmxkQyfV_JDA5d1rkpNEnJLB9EQUHlRBTnERL4ojUZVdl5/exec"; 
   const urlParams = new URLSearchParams(window.location.search);
@@ -8,7 +95,7 @@
   let activeUploads = 0;
   let draftBills = JSON.parse(localStorage.getItem('revizo_draftBills') || '{}');
   let draftPhotos = JSON.parse(localStorage.getItem('revizo_draftPhotos') || '{}');
-  let uploadStatus = {}; // Temporary live status
+  let uploadStatus = {}; 
 
   function saveBillDraft(mobile, val) {
     draftBills[mobile] = val;
@@ -97,7 +184,7 @@
         else if(savedStatus.includes("❌")) statusStyle += "color:#ff5252;";
         else statusStyle += "color:#f1c40f;";
         
-        // NAYA PREVIEW GENERATOR (Auto-restore previews)
+        // PREVIEW GENERATOR
         let previewHTML = "";
         if(savedPhoto) {
             let urls = savedPhoto.split(',');
@@ -123,7 +210,6 @@
           </div>
           
           <div id="photo-preview-${num}" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">${previewHTML}</div>
-          
           <div id="photo-status-${num}" class="photo-status" style="${statusStyle}">${savedStatus}</div>
 
           <div style='display:flex; gap:8px; width:100%; margin-top:5px;'>
@@ -134,7 +220,6 @@
       });
     } else { list.innerHTML = "<div style='color:#888; text-align:center;'>No pending verifications...</div>"; }
     
-    // Render CRM reminders (No changes here)
     const remList = document.getElementById('reminderList'); remList.innerHTML = '';
     if(reminders && reminders.length > 0) {
       document.getElementById('remindersSection').style.display = 'block';
@@ -175,12 +260,9 @@
     let total = files.length;
     let current = 0;
     
-    // Retain previously uploaded photos
     let uploadedUrls = urlInput.value ? urlInput.value.split(',') : [];
     
-    // Pause auto-refresh
     activeUploads++;
-    
     uploadStatus[mobile] = "⏳ Preparing " + total + " photo(s)...";
     status.style.display = "block";
     status.style.color = "#f1c40f";
@@ -194,7 +276,7 @@
             uploadStatus[mobile] = "✅ " + uploadedUrls.length + " Photo(s) Attached!";
             status.innerText = uploadStatus[mobile]; 
             status.style.color = "#25D366";
-            activeUploads--; // Resume auto-refresh
+            activeUploads--; 
             return;
         }
         
@@ -223,11 +305,8 @@
                 .then(r => r.json()).then(d => {
                     if(d.success) {
                         uploadedUrls.push(d.url);
-                        
-                        // NAYA: Live preview button screen par jod do
                         let idx = uploadedUrls.length;
                         previewContainer.innerHTML += `<a href="${d.url}" target="_blank" style="background:#222; color:#d4af37; font-size:11px; padding:6px 10px; border-radius:6px; text-decoration:none; border:1px solid rgba(212, 175, 55, 0.4); font-weight:bold;">📸 Photo ${idx}</a>`;
-                        
                         current++;
                         uploadNext(); 
                     } else {
@@ -259,7 +338,7 @@
     fetch(REVIZO_API + "?action=approveUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken + "&billAmount=" + encodeURIComponent(billAmt) + "&photoUrls=" + encodeURIComponent(photoUrl))
     .then(r => r.json()).then(d => { 
         if(d.success) {
-            clearDrafts(mobile); // Clear memory
+            clearDrafts(mobile); 
             document.getElementById('card-'+mobile).remove(); 
             loadPending(); 
         }
@@ -270,7 +349,7 @@
     document.getElementById('card-'+mobile).style.opacity = '0.5';
     fetch(REVIZO_API + "?action=rejectUser&shopId=" + SHOP_ID + "&mobile=" + mobile + "&auth=" + authToken).then(r => r.json()).then(d => { 
         if(d.success) {
-            clearDrafts(mobile); // Clear memory
+            clearDrafts(mobile); 
             document.getElementById('card-'+mobile).remove(); 
             loadPending(); 
         }
@@ -279,6 +358,3 @@
 </script>
 </body>
 </html>
-
-
-
