@@ -205,7 +205,6 @@
   window.addEventListener('offline', () => toggleOffline(true));
   window.addEventListener('online', () => { toggleOffline(false); syncOfflineData(); });
   
-  // Warning block for accidental refresh (unless auto-redirecting)
   window.addEventListener('beforeunload', (e) => { if(isFormDirty) { e.preventDefault(); e.returnValue = ''; } });
 
   function toggleOffline(isOff) { const b = document.getElementById('network-badge'); if(isOff) b.classList.add('badge-offline'); else b.classList.remove('badge-offline'); }
@@ -220,28 +219,35 @@
 
   document.getElementById('input-name').addEventListener('blur', function() { let val = this.value.trim().replace(/[<>]/g, ""); this.value = val.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); const err = document.getElementById('name-error'); if(/\d/.test(this.value)) { this.classList.add('error-border'); err.style.display = 'block'; } else { this.classList.remove('error-border'); err.style.display = 'none'; } });
   
-  // FIX: SMART AUTO-LOGIN WITHOUT "LEAVE SITE" WARNING
+  // FIX: STRICT AUTO-LOGIN (Prevents the Infinite Loop)
   document.getElementById('input-phone').addEventListener('input', function() { 
       this.value = this.value.replace(/\D/g, ''); 
       if (this.value.length === 10) {
           const btn = document.getElementById('btn-submit');
-          let originalText = btn.innerText;
+          let originalText = "CUSTOMER 🎁";
           btn.innerText = "CHECKING VIP...";
+          btn.disabled = true; 
           
           fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + this.value)
           .then(res => res.json()).then(data => {
-              if(data.status !== "NOT_FOUND") {
+              btn.disabled = false;
+              // Yahan abhi sirf tabhi page change hoga jab 100% sure hoga
+              if(data.status === "APPROVED" || data.status === "PENDING" || data.status === "SUCCESS" || data.status === "CLAIMED") {
                   localStorage.setItem("revizo_mobile", this.value);
                   localStorage.setItem("revizo_category", data.category || "default");
-                  
-                  // Disable the "Leave Site?" warning popup before redirecting
                   isFormDirty = false; 
-                  
                   window.location.replace("rewards.html" + window.location.search);
               } else {
                   btn.innerText = originalText;
               }
-          }).catch(() => { btn.innerText = originalText; });
+          }).catch(() => { 
+              btn.innerText = originalText; 
+              btn.disabled = false;
+          });
+      } else {
+          const btn = document.getElementById('btn-submit');
+          btn.innerText = "CUSTOMER 🎁";
+          btn.disabled = false;
       }
   });
 
@@ -264,10 +270,10 @@
 
     fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + phone)
       .then(res => res.json()).then(data => {
-        if(data.status !== "NOT_FOUND") {
+        // STRICT CHECK HERE TOO
+        if(data.status === "APPROVED" || data.status === "PENDING" || data.status === "SUCCESS" || data.status === "CLAIMED") {
           localStorage.setItem("revizo_mobile", phone); 
           localStorage.setItem("revizo_category", data.category || "default");
-
           isFormDirty = false;
           window.location.replace("rewards.html" + window.location.search);
         } else {
