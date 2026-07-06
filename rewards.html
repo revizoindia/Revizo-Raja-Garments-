@@ -226,7 +226,7 @@
       }
       if (data.status === "SUCCESS" || data.status === "ALREADY_PENDING") {
         btn.innerHTML = "⏳ WAITING...";
-        document.getElementById("visitStatus").innerHTML = "<span style='font-size: 20px; font-weight: 900;'>⏳ Waiting 4 Approval</span>"; 
+        document.getElementById("visitStatus").innerHTML = "<span style='font-size: 20px; font-weight: 900;'>⏳ Waiting for Approval...</span>"; 
         document.getElementById("visitStatus").className = "status-badge bg-warning";
         waitForCashier(savedMobile);
       } else { fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + savedMobile).then(r => r.json()).then(showRewards); }
@@ -350,7 +350,7 @@
       document.getElementById("voucher-box").classList.add("anti-fraud-pulse");
       document.getElementById("live-time").style.display = "block";
     } else if (data.status === "PENDING") {
-      document.getElementById("visitStatus").innerHTML = "<span style='font-size: 20px; font-weight: 900;'>⏳ Waiting 4 Approval</span>"; 
+      document.getElementById("visitStatus").innerHTML = "<span style='font-size: 20px; font-weight: 900;'>⏳ Waiting for Approval...</span>"; 
       document.getElementById("visitStatus").className = "status-badge bg-warning";
       nBtn.disabled = true; nBtn.innerHTML = "⏳ WAITING..."; waitForCashier(savedMobile);
     } else {
