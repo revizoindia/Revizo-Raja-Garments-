@@ -119,7 +119,8 @@
 
   <button id="logoutBtn" onclick="secureLogout()" style="background: transparent; border: 2px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 12px; margin-top: 25px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; box-sizing: border-box;">🚪 LOG OUT</button>
 
-  <div id="exchangeText" style="font-size: 11px; color: #888; margin-top: 15px; font-weight: bold;"></div>
+  <!-- YAHAN POLICY TEXT KO BADA AUR BOLD KIYA GAYA HAI -->
+  <div id="exchangeText" style="font-size: 14px; margin-top: 20px; font-weight: 900; line-height: 1.6; opacity: 0.85; color: var(--text);"></div>
 </div>
 
 <div id="waGateOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box;">
@@ -270,8 +271,9 @@
         document.getElementById("reviewBox").style.display = "block";
     }
 
+    // YAHAN EXCHANGE AUR NO REFUND POLICY DONO LINES ADD KI GAYI HAIN
     let exDays = data.exchangeDays || "7";
-    document.getElementById("exchangeText").innerText = "* Exchanges valid for " + exDays + " days from purchase.";
+    document.getElementById("exchangeText").innerHTML = "* Exchanges valid for " + exDays + " days from purchase.<br><span style='display:inline-block; margin-top:4px;'>* NO REFUND POLICY</span>";
 
     let cat = localStorage.getItem("revizo_category") || data.category || "default";
     let waLink = data.dynamicWaLink; 
@@ -292,7 +294,6 @@
         nextReward = rewardsArr[sCount].trim();
     }
     
-    // YAHAN HAI TUMHARA DYNAMIC ORDER LOGIC (Exactly 1, 2, 3, 4)
     let isConfirmed = (data.status === "APPROVED" || data.status === "CLAIMED");
     
     if (isConfirmed) {
