@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>WELCOME TO SHOP</title>
+<title>WELCOME TO VIP KIOSK</title>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="application-name" content="VIP Kiosk">
@@ -86,7 +86,9 @@
 
 <div class="card" id="step-1">
   <div id="network-badge" title="Network Status"></div>
-  <img id="shopLogo" src="https://i.ibb.co/TMjycHLN/ei-1780753422474-removebg-preview.png" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain;">
+  
+  <img id="shopLogo" src="" style="max-width: 120px; max-height: 120px; border-radius: 30px; margin-bottom: 15px; object-fit: contain; display: none;">
+  
   <div id="shopTitle" style="color: var(--text); margin-top: 0; font-size: 14pt; font-weight: bold;">Loading...</div>
   <p style="font-size:12px; opacity:0.7; margin-top: 5px; margin-bottom: 20px;">Returning VIPs: Only Number is required!</p>
   
@@ -106,11 +108,6 @@
     <button class="btn-mic-dark" onclick="startMic('input-name', this)">🎙️</button>
   </div>
   <p id="name-error" class="error-text">Please enter a valid name (No numbers).</p>
-  
-  <div class="input-group">
-    <input type="text" id="input-age" class="dark-input save-draft" placeholder="Age" maxlength="3" autocomplete="off" inputmode="numeric">
-    <button class="btn-mic-dark" onclick="startMic('input-age', this)">🎙️</button>
-  </div>
   
   <div class="input-group">
     <input type="text" id="input-dob" class="dark-input save-draft" placeholder="Birthday" maxlength="30" autocomplete="off">
@@ -136,6 +133,17 @@
 </div>
 
 <script>
+  // INJECTED FEATURE: PWA Registration (Triggers Install Bar in Browsers)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        console.log('ServiceWorker registration successful');
+      }, function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+  }
+
   const REVIZO_API = "https://script.google.com/macros/s/AKfycbzzzP7KIUr1GkW5et05N3qmxkQyfV_JDA5d1rkpNEnJLB9EQUHlRBTnERL4ojUZVdl5/exec"; 
   const urlParams = new URLSearchParams(window.location.search);
   const SHOP_ID = urlParams.get('shop') || 'RAJAGARMENTS'; 
@@ -149,7 +157,7 @@
         VISITOR_LINKS = data.waLinks;
       }
     })
-    .catch(err => console.log("Failed to load WhatsApp links from sheet", err));
+    .catch(err => console.log("Failed to load WhatsApp links", err));
 
   let isFormDirty = false;
 
@@ -169,11 +177,14 @@
         document.body.style.display = "flex"; 
     }
 
-    // THIS IS THE FIX: Both Name and Logo will now update correctly!
     fetch(REVIZO_API + "?action=getShopMeta&shopId=" + SHOP_ID)
       .then(r => r.json()).then(meta => { 
         if(meta.shopName) document.getElementById('shopTitle').innerText = meta.shopName; 
-        if(meta.logoUrl) document.getElementById('shopLogo').src = meta.logoUrl;
+        if(meta.logoUrl) {
+            let logoImg = document.getElementById('shopLogo');
+            logoImg.src = meta.logoUrl;
+            logoImg.style.display = "inline-block"; // Shows only after Excel image is ready
+        }
       });
 
     const ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -204,12 +215,32 @@
     if (!raw) return ""; let clean = raw.toLowerCase().replace(/(st|nd|rd|th|वीं|वें)/g, ""); const months = { 'jan': '01', 'january': '01', 'janvari': '01', 'जनवरी': '01', 'ਜਨਵਰੀ': '01', 'feb': '02', 'february': '02', 'farvari': '02', 'फरवरी': '02', 'फ़रवरी': '02', 'ਫਰਵਰੀ': '02', 'mar': '03', 'march': '03', 'मार्च': '03', 'ਮਾਰਚ': '03', 'apr': '04', 'april': '04', 'aprail': '04', 'अप्रैल': '04', 'ਅਪ੍ਰੈਲ': '04', 'may': '05', 'mai': '05', 'मई': '05', 'ਮਈ': '05', 'jun': '06', 'june': '06', 'जून': '06', 'ਜੂਨ': '06', 'jul': '07', 'july': '07', 'julai': '07', 'जुलाई': '07', 'ਜੁਲਾਈ': '07', 'aug': '08', 'august': '08', 'agast': '08', 'अगस्त': '08', 'ਅਗਸਤ': '08', 'sep': '09', 'september': '09', 'sitambar': '09', 'सितंबर': '09', 'सितम्बर': '09', 'ਸਤੰਬਰ': '09', 'oct': '10', 'october': '10', 'aktubar': '10', 'अक्टूबर': '10', 'अकतूबर': '10', 'nov': '11', 'november': '11', 'navambar': '11', 'नवंबर': '11', 'नवम्बर': '11', 'ਨਵੰਬਰ': '11', 'dec': '12', 'december': '12', 'disambar': '12', 'दिसंबर': '12', 'दिसम्बर': '12', 'ਦਸੰਬਰ': '12' };
     for (let m in months) clean = clean.replace(new RegExp(m, 'g'), " " + months[m] + " "); let n = clean.match(/\d+/g); if (!n) return ""; let d = n[0].padStart(2, '0'), y = new Date().getFullYear(); if (n.length >= 3) y = n[2].length === 2 ? (parseInt(n[2]) > 30 ? '19'+n[2] : '20'+n[2]) : n[2]; return `${y}-${(n[1]||'01').padStart(2, '0')}-${d}`;
   }
-  function formatSmartAge(raw) { if (!raw) return ""; let numbers = raw.match(/\d+/g); return (numbers && numbers.length > 0) ? numbers[0] : ""; }
 
   function joinVisitor(ageGroup) { const link = VISITOR_LINKS[ageGroup] || VISITOR_LINKS["default"]; if (link && link !== "PASTE_LINK_DEFAULT" && !link.includes("PASTE_LINK")) { window.open(link, '_blank'); } else { alert("Community link not yet configured."); } }
 
-  document.getElementById('input-phone').addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
   document.getElementById('input-name').addEventListener('blur', function() { let val = this.value.trim().replace(/[<>]/g, ""); this.value = val.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); const err = document.getElementById('name-error'); if(/\d/.test(this.value)) { this.classList.add('error-border'); err.style.display = 'block'; } else { this.classList.remove('error-border'); err.style.display = 'none'; } });
+  
+  // FIX 2: SMART AUTO-LOGIN WHEN 10 DIGITS TYPED
+  document.getElementById('input-phone').addEventListener('input', function() { 
+      this.value = this.value.replace(/\D/g, ''); 
+      if (this.value.length === 10) {
+          const btn = document.getElementById('btn-submit');
+          let originalText = btn.innerText;
+          btn.innerText = "CHECKING VIP...";
+          
+          fetch(REVIZO_API + "?action=checkWallet&shopId=" + SHOP_ID + "&mobile=" + this.value)
+          .then(res => res.json()).then(data => {
+              if(data.status !== "NOT_FOUND") {
+                  localStorage.setItem("revizo_mobile", this.value);
+                  localStorage.setItem("revizo_category", data.category || "default");
+                  window.location.replace("rewards.html" + window.location.search);
+              } else {
+                  btn.innerText = originalText;
+              }
+          }).catch(() => { btn.innerText = originalText; });
+      }
+  });
+
   document.getElementById('input-phone').addEventListener('blur', function() { const isLazy = /^(?!([0-9])\1{9})[6-9]\d{9}$/.test(this.value); const err = document.getElementById('phone-error'); if(!isLazy && this.value !== '') { document.getElementById('phone-box-visual').classList.add('error-border'); err.style.display = 'block'; } else { document.getElementById('phone-box-visual').classList.remove('error-border'); err.style.display = 'none'; } });
 
   function syncOfflineData() { let savedProfile = localStorage.getItem('offline_payload'); if (savedProfile) { let data = JSON.parse(savedProfile); fetch(REVIZO_API + "?action=submitFullProfile&shopId=" + data.shopId + "&mobile=" + data.mobile + "&name=" + encodeURIComponent(data.name) + "&category=" + data.category + "&dob=" + data.dob + "&anniversary=" + data.anniversary).then(() => { localStorage.removeItem('offline_payload'); }); } }
@@ -237,16 +268,13 @@
           window.location.replace("rewards.html" + window.location.search);
         } else {
           let name = nameInput.value.trim().replace(/[<>]/g, ""); 
-          let ageStr = formatSmartAge(document.getElementById('input-age').value);
           let dob = formatSmartDate(document.getElementById('input-dob').value);
           let profileErr = false;
           if (name.length < 2 || /\d/.test(name)) { nameInput.classList.add('error-border'); profileErr = true; } 
-          if(!ageStr) { document.getElementById('input-age').classList.add('error-border'); profileErr = true; }
           if(!dob) { document.getElementById('input-dob').classList.add('error-border'); profileErr = true; }
-          if(profileErr) { alert("NEW VIP: Please fill Name, Age, and Birthday to create wallet!"); btn.disabled = false; btn.innerText = "ACCESS YOUR WALLET"; return; }
+          if(profileErr) { alert("NEW VIP: Please fill Name and Birthday to create wallet!"); btn.disabled = false; btn.innerText = "CUSTOMER 🎁"; return; }
           
-          let ageNum = parseInt(ageStr); let cat = "Other";
-          if(ageNum >= 16 && ageNum <= 20) cat = "16 to 20"; else if(ageNum >= 21 && ageNum <= 25) cat = "21 to 25"; else if(ageNum >= 26 && ageNum <= 35) cat = "26 to 35"; else if(ageNum >= 36 && ageNum <= 44) cat = "36 to 44"; else if(ageNum >= 45) cat = "45 to 55";
+          let cat = "Other"; // Age is removed, sending default category
           
           localStorage.setItem("revizo_mobile", phone); 
           let ann = formatSmartDate(document.getElementById('input-anni').value);
@@ -260,10 +288,10 @@
               localStorage.setItem('offline_payload', JSON.stringify(offData));
               btn.style.backgroundColor = "rgba(255, 80, 80, 0.8)"; setTimeout(() => { btn.style.backgroundColor = ""; }, 3000);
               alert("INTERNET ERROR: Saved locally. We will auto-submit when online.");
-              btn.disabled = false; btn.innerText = "ACCESS YOUR WALLET";
+              btn.disabled = false; btn.innerText = "CUSTOMER 🎁";
             });
         }
-      }).catch(() => { btn.disabled = false; btn.innerText = "ACCESS YOUR WALLET"; btn.style.backgroundColor = "rgba(255, 80, 80, 0.8)"; setTimeout(() => { btn.style.backgroundColor = ""; }, 3000); });
+      }).catch(() => { btn.disabled = false; btn.innerText = "CUSTOMER 🎁"; btn.style.backgroundColor = "rgba(255, 80, 80, 0.8)"; setTimeout(() => { btn.style.backgroundColor = ""; }, 3000); });
   }
 
   function startMic(id, btnElement) {
