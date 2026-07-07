@@ -1,6 +1,6 @@
 {
-  "name": "Revizo VIP Wallet",
-  "short_name": "VIP Wallet",
+  "name": "MY WALLET",
+  "short_name": "MY WALLET",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0a0a",
