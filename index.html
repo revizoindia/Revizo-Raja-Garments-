@@ -229,7 +229,7 @@
               if (choiceResult.outcome === 'accepted') {
                   // If they hit install, instantly throw them to WA
                   if(waLinkToOpen && !waLinkToOpen.includes("PASTE_LINK")) {
-                      window.open(waLinkToOpen, "_blank");
+                      window.location.href = waLinkToOpen; 
                   }
               }
               deferredPrompt = null;
@@ -240,7 +240,9 @@
               document.getElementById('ios-instruction').style.display = "block";
           } else {
               // Fallback for desktops / already installed browsers
-              if(waLinkToOpen && !waLinkToOpen.includes("PASTE_LINK")) window.open(waLinkToOpen, "_blank");
+              if(waLinkToOpen && !waLinkToOpen.includes("PASTE_LINK")) {
+                  window.location.href = waLinkToOpen; 
+              }
           }
       }
   }
